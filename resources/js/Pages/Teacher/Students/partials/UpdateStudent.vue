@@ -47,7 +47,6 @@
 <script>
 import { useForm } from '@inertiajs/vue3'
 import InputError from '@/Components/InputError.vue';
-import { Inertia } from '@inertiajs/inertia';
 
 export default {
     components: { InputError },
@@ -79,7 +78,7 @@ export default {
         submit() {
             this.form.patch(route('update.student'), {
                 onSuccess: () => {
-                    Inertia.get(route('show.student', this.student.id))
+                    this.$inertia.get(route('show.student', this.student.id))
                     this.onCloseClick()
                     this.form.reset('first_name', 'last_name', 'email', 'password')
                 }
