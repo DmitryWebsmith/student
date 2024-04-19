@@ -60,7 +60,9 @@ export default {
     },
     watch: {
         updateProps(oldData, newData) {
+            console.log(oldData + ' ' + newData)
             if (oldData !== newData) {
+                console.log(route('show.student', this.student.id))
                 this.$inertia.get(route('show.student', this.student.id))
             }
         }
