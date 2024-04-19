@@ -27,7 +27,6 @@
                     <q-card-section>
                         <q-card-actions align="left">
                             <UpdateStudent
-                                @response="(msg) => updateProps = msg"
                                 :student = student
                                 :user = user>
                             </UpdateStudent>
@@ -52,20 +51,6 @@ export default {
     props: {
         student: Object,
         user: Object
-    },
-    data () {
-        return {
-            updateProps: false
-        }
-    },
-    watch: {
-        updateProps(oldData, newData) {
-            console.log(oldData + ' ' + newData)
-            if (oldData !== newData) {
-                console.log(route('show.student', this.student.id))
-                this.$inertia.get(route('show.student', this.student.id))
-            }
-        }
     }
 }
 </script>

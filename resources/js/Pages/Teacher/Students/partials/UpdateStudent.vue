@@ -79,7 +79,7 @@ export default {
         submit() {
             this.form.patch(route('update.student'), {
                 onFinish: () => {
-                    this.$emit('response', true)
+                    this.$inertia.get(route('show.student', this.student.id))
                 }
             });
         }
