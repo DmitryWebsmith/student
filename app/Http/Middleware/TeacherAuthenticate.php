@@ -6,20 +6,21 @@ use App\Services\RoleService;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherAuthenticate extends Middleware
 {
     public function handle($request, Closure $next, ...$guards)
     {
-        if (!$this->auth->user()) {
-            return route('index');
+        if (!Auth::check()) {
+            return redirect()->route('index');
         }
 
         if (app(RoleService::class)->isTeacher()) {
             return $next($request);
         }
 
-        return route('index');
+        return redirect()->route('index');
     }
 
     /**
