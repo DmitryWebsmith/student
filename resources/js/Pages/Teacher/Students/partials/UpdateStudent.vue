@@ -11,15 +11,15 @@
 
                 <form @submit.prevent="submit">
                     <div class="mt-4">
-                        <label for="first_name">Имя:</label>
-                        <input id="first_name" v-model="form.first_name" class="mt-2 block w-full" />
-                        <InputError class="mt-2" :message="form.errors.first_name" />
-                    </div>
-
-                    <div class="mt-4">
                         <label for="last_name">Фамилия:</label>
                         <input id="last_name" v-model="form.last_name" class="mt-2 block w-full" />
                         <InputError class="mt-2" :message="form.errors.last_name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="first_name">Имя:</label>
+                        <input id="first_name" v-model="form.first_name" class="mt-2 block w-full" />
+                        <InputError class="mt-2" :message="form.errors.first_name" />
                     </div>
 
                     <div class="mt-4">
@@ -54,6 +54,7 @@ export default {
         student: Object,
         user: Object
     },
+    emits: ['response'],
     mounted() {
         this.form = useForm({
             first_name: this.student.first_name,
@@ -77,10 +78,8 @@ export default {
         },
         submit() {
             this.form.patch(route('update.student'), {
-                onSuccess: () => {
-                    this.$inertia.get(route('show.student', this.student.id))
-                    this.onCloseClick()
-                    this.form.reset('first_name', 'last_name', 'email', 'password')
+                onFinish: () => {
+                    this.$emit('response', true)
                 }
             });
         }
