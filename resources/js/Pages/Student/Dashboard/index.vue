@@ -1,5 +1,6 @@
 <template>
     <Layout>
+        <Head title="Кабинет учащегося" />
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -78,7 +79,7 @@
 
 <script>
 import Layout from '@/Layouts/AuthenticatedStudentLayout.vue'
-import { router } from '@inertiajs/vue3'
+import {Head, router} from '@inertiajs/vue3'
 import { useQuasar } from 'quasar'
 
 export default {
@@ -89,7 +90,7 @@ export default {
         current_time: String,
         message: String,
     },
-    components: { Layout },
+    components: {Head, Layout },
     data () {
         return {
             $q: useQuasar(),

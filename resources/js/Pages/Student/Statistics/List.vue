@@ -1,5 +1,6 @@
 <template>
     <Layout>
+        <Head title="Статистика учащегося" />
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -72,12 +73,12 @@
 
 <script>
 import Layout from '@/Layouts/AuthenticatedStudentLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 // import ShowTask from "@/Pages/Teacher/Tasks/ShowTask.vue";
 
 export default {
     name: "List",
-    components: { Layout, Link },
+    components: {Head, Layout, Link },
     props: {
         tasks: Object,
         student: Object,
