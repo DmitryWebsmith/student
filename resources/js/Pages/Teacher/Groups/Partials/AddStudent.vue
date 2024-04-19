@@ -78,9 +78,11 @@ export default {
         },
         submit() {
             this.form.post(route('store.student'), {
-                onSuccess: () => {
-                    this.onCloseClick()
+                onFinish: () => {
+                    this.first_name = '';
+                    this.last_name = '';
                     this.form.reset('first_name', 'last_name', 'email', 'password')
+                    this.onCloseClick()
                 }
             });
         },
