@@ -21,12 +21,16 @@
                 </div>
             </div>
         </div>
-        <div class="py-12">
+        <div class="py-1">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <q-card-section>
                         <q-card-actions align="left">
-                            <UpdateStudent :student = student :user = user></UpdateStudent>
+                            <UpdateStudent
+                                @response="(msg) => updateProps = msg"
+                                :student = student
+                                :user = user>
+                            </UpdateStudent>
                             <DeleteStudent :student_id = student.id></DeleteStudent>
                         </q-card-actions>
                     </q-card-section>
@@ -49,6 +53,18 @@ export default {
         student: Object,
         user: Object
     },
+    data () {
+        return {
+            updateProps: false
+        }
+    },
+    watch: {
+        updateProps(oldData, newData) {
+            if (oldData !== newData) {
+                this.$inertia.get(route('show.student', this.student.id))
+            }
+        }
+    }
 }
 </script>
 

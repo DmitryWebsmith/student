@@ -11,15 +11,15 @@
 
                 <form @submit.prevent="submit">
                     <div class="mt-4">
-                        <label for="first_name">Имя:</label>
-                        <input id="first_name" v-model="first_name" class="mt-2 block w-full" />
-                        <InputError class="mt-2" :message="form.errors.first_name" />
-                    </div>
-
-                    <div class="mt-4">
                         <label for="last_name">Фамилия:</label>
                         <input id="last_name" v-model="last_name" class="mt-2 block w-full" />
                         <InputError class="mt-2" :message="form.errors.last_name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="first_name">Имя:</label>
+                        <input id="first_name" v-model="first_name" class="mt-2 block w-full" />
+                        <InputError class="mt-2" :message="form.errors.first_name" />
                     </div>
 
                     <div class="mt-4">
@@ -71,6 +71,7 @@ export default {
     },
     methods: {
         show () {
+            this.form.password = this.generatePassword(6)
             this.$refs.dialog.show()
         },
         onCloseClick () {
