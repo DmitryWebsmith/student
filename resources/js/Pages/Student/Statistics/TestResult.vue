@@ -1,5 +1,6 @@
 <template>
     <Layout>
+        <Head title="Результат" />
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -38,12 +39,12 @@
 
 <script>
 import Layout from '@/Layouts/AuthenticatedStudentLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import StudentAnswers from "@/Pages/Student/Statistics/components/StudentAnswers.vue";
 
 export default {
     name: "List",
-    components: { Layout, Link, StudentAnswers },
+    components: { Head, Layout, Link, StudentAnswers },
     props: {
         test: Object,
         questions: Object,
