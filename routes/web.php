@@ -50,7 +50,7 @@ Route::middleware([TeacherAuthenticate::class])->group(function () {
     Route::post('/test/save-multiple-answer', [TestController::class, 'saveMultipleAnswer']);
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
-    Route::get('/task/{$id}', [TaskController::class, 'showTask'])->name('show.task.results');
+    Route::get('/task/{id}', [TaskController::class, 'showTask'])->name('show.task.results');
     Route::get('/add-task', [TaskController::class, 'addTask'])->name('add.task');
     Route::post('/task', [TaskController::class, 'store'])->name('store.task');
     Route::delete('/task', [TaskController::class, 'destroy'])->name('delete.task');

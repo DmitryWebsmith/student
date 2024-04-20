@@ -43,11 +43,14 @@ class StatisticsController extends Controller
         $student = Student::query()
             ->with('group')
             ->where('id', $studentId)
-            ->first();
+            ->firstOrFail();
+
+        $task = Task::query()
+            ->findOrFail($request->get('task_id'));
 
         $test = Test::query()
             ->with('category')
-            ->findOrFail($request->get('test_id'));
+            ->findOrFail($task->test_id);
 
         $questions = Question::query()
             ->where('test_id', $test->id)
@@ -58,7 +61,7 @@ class StatisticsController extends Controller
             'test' => $test,
             'questions' => $questions,
             'student' => $student,
-            'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $test->id),
+            'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id),
         ];
 
         return Inertia::render('Teacher/Statistics/StudentResult', $data);
@@ -79,7 +82,7 @@ class StatisticsController extends Controller
         foreach ($students as $student) {
             $studentsData[$student->id] = [
                 'name' => $student->first_name . ' ' . $student->last_name,
-                'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->test_id),
+                'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id),
             ];
         }
 

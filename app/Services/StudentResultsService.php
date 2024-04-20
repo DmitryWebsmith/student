@@ -3,22 +3,25 @@
 namespace App\Services;
 
 use App\Models\StudentAnswer;
+use App\Models\Task;
 use App\Models\Test;
 
 class StudentResultsService
 {
-    public function getResultsOfPassedTest(int $studentId, int $testId): array
+    public function getResultsOfPassedTest(int $studentId, int $taskId): array
     {
         $result = [];
 
         $result['id'] = $studentId;
-        $result['test_id'] = $testId;
+        $result['task_id'] = $taskId;
         $result['correctAnswers'] = 0;
         $result['questionNumbers'] = 0;
         $result['questions'] = [];
 
+        $task = Task::query()->findOrFail($taskId);
+
         $test = Test::query()
-            ->findOrFail($testId);
+            ->findOrFail($task->test_id);
 
         foreach ($test->questions as $question) {
             $incorrectAnswer = 0;
@@ -27,6 +30,7 @@ class StudentResultsService
                 $studentAnswer = StudentAnswer::query()
                     ->where(
                         [
+                            'task_id' => $taskId,
                             'student_id' => $studentId,
                             'answer_id' => $answer->id,
                         ]
@@ -38,7 +42,7 @@ class StudentResultsService
                         $incorrectAnswer++;
                         continue;
                     }
-                    if ($answer->text !== $studentAnswer->text) {
+                    if ($answer->answer !== $studentAnswer->text) {
                         $incorrectAnswer++;
                     }
                 }

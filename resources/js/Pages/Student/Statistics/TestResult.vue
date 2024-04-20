@@ -25,7 +25,9 @@
                                     class="px-6 py-4 vertical-top"
                                     :style="getStyle(question.id)"
                                 >
-                                    <StudentAnswers :question="question" />
+                                    <StudentAnswers
+                                        :student="student"
+                                        :question="question" />
                                 </td>
                             </tr>
                             </tbody>

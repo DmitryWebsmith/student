@@ -42,7 +42,7 @@
                                     </th>
                                     <th class="px-6 py-4 text-weight-regular">
                                         <Link
-                                            :href="route('student.statistics.test.result', {test_id: result.test_id})">
+                                            :href="route('student.statistics.test.result', {task_id: result.task_id})">
                                             Просмотр
                                         </Link>
                                     </th>
@@ -57,7 +57,7 @@
                             <template v-if="Object.keys(tasks).length === 0">
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4" colspan="5">
-                                        Нет пройденных тестов.
+                                        Нет пройденных тестов. Если тест пройден, результат отобразится после окончания времени прохождения теста.
                                     </td>
                                 </tr>
                             </template>

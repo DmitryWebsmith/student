@@ -43,7 +43,7 @@
                                         {{ task.end_time }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <Link :href="route('show.task.results', task.id)">Результаты</Link>
+                                        <DeleteTask :id="task.id" />
                                     </td>
                                 </tr>
 
@@ -74,10 +74,11 @@
 import Layout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import ShowTask from "@/Pages/Teacher/Tasks/ShowTask.vue";
+import DeleteTask from "@/Pages/Teacher/Tasks/DeleteTask.vue";
 
 export default {
     name: "List",
-    components: { Layout, Link, ShowTask },
+    components: { Layout, Link, ShowTask, DeleteTask },
     props: {
         tasks: Object,
     },
