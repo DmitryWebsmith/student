@@ -18,7 +18,7 @@ class Task extends Model
 
     public function test_passed()
     {
-        return $this->hasOne(TestPassed::class, 'test_id', 'test_id');
+        return $this->hasMany(TestPassed::class, 'task_id', 'id');
     }
 
     public function group()

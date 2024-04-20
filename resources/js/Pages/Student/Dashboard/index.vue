@@ -38,17 +38,19 @@
                                                     <td class="px-6 py-4">
                                                         {{ task.test.name }}
                                                     </td>
-                                                    <td class="px-6 py-4">
-                                                        <template v-if="task.test_passed === null || (task.test_passed !== null && task.test_passed.student_id !== student.id)">
+                                                    <template v-if="passedTest(task)">
+                                                        <td class="px-6 py-4">
+                                                            Тест пройден
+                                                        </td>
+                                                    </template>
+                                                    <template v-if="!passedTest(task)">
+                                                        <td class="px-6 py-4">
                                                             <q-btn
                                                                 color="primary"
                                                                 label="Пройти тест"
                                                                 @click="passTest(task)"/>
-                                                        </template>
-                                                        <template v-if="task.test_passed !== null && task.test_passed.student_id === student.id">
-                                                            Тест пройден
-                                                        </template>
-                                                    </td>
+                                                        </td>
+                                                    </template>
                                                     <td class="px-6 py-4">
                                                         {{ task.start_time }}
                                                     </td>
@@ -102,6 +104,26 @@ export default {
         }
     },
     methods: {
+        passedTest(task) {
+            if (task.test_passed === null || task.test_passed === undefined) {
+                return false
+            }
+
+            let testPassedList = task.test_passed
+
+            for (let key in testPassedList) {
+                if (testPassedList.hasOwnProperty(key)) {
+                    let testPassed = testPassedList[key]
+                    if (testPassed.hasOwnProperty('student_id') && testPassed.hasOwnProperty('task_id')) {
+                        if (testPassed.student_id === this.student.id && testPassed.task_id === task.id) {
+                            return true
+                        }
+                    }
+                }
+            }
+
+            return false
+        },
         showNotify(message) {
             this.$q.notify({
                 message: message,

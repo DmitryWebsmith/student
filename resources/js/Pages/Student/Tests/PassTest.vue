@@ -10,6 +10,7 @@
                          class="px-6 pb-3 text-gray-900 dark:text-gray-100">
                         <Question
                             @response="(msg) => testPassed = msg"
+                            :task="task"
                             :question="question"
                             :student="student"/>
                     </div>
@@ -29,6 +30,7 @@ import { router } from '@inertiajs/vue3'
 
 export default {
     props: {
+        task: Object,
         test: Object,
         questions: Object,
         student: Object,
@@ -43,7 +45,7 @@ export default {
         closeTest() {
             let data = {
                 student_id: this.student.id,
-                test_id: this.test.id
+                task_id: this.task.id
             }
             axios.post(route('mark.test.passing'), data)
                 .then((res) => {

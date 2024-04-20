@@ -47,7 +47,7 @@
                                 </td>
                                 <td class="px-6 py-4" style="text-align: center">
                                     <Link
-                                        :href="route('show.student.result.stat', {student_id: student.result.id, test_id: student.result.test_id})">
+                                        :href="route('show.student.result.stat', {student_id: student.result.id, task_id: student.result.task_id})">
                                         Результаты
                                     </Link>
                                 </td>

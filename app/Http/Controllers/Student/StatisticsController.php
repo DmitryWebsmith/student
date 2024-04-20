@@ -40,9 +40,10 @@ class StatisticsController extends Controller
         $studentResults = [];
         foreach ($tasks as $task) {
             $studentResults[$task->test->id] = [
+                'task_id' => $task->id,
                 'test_id' => $task->test->id,
                 'test_name' => $task->test->name,
-                'score' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->test_id)['score'],
+                'score' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id)['score'],
                 'pass_date' => Carbon::parse($task->end_time)->format('d/m/Y H:i'),
                 'category_name' => $task->test->category->name,
             ];
@@ -63,9 +64,11 @@ class StatisticsController extends Controller
             ->where('user_id', Auth::id())
             ->first();
 
+        $task = Task::query()->findOrFail($request->get('task_id'));
+
         $test = Test::query()
             ->with('category')
-            ->findOrFail($request->get('test_id'));
+            ->findOrFail($task->test_id);
 
         $questions = Question::query()
             ->where('test_id', $test->id)
@@ -76,7 +79,7 @@ class StatisticsController extends Controller
             'test' => $test,
             'questions' => $questions,
             'student' => $student,
-            'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $test->id),
+            'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id),
         ];
 
         return Inertia::render('Student/Statistics/TestResult', $data);

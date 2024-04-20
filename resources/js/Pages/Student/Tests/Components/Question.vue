@@ -34,6 +34,7 @@ import { useQuasar } from 'quasar'
 export default {
     name: "Question",
     props: {
+        task: Object,
         question: Object,
         student: Object
     },
@@ -42,6 +43,10 @@ export default {
         for (let key in this.question.student_answers) {
             if (this.question.student_answers.hasOwnProperty(key)) {
                 if (this.question.student_answers[key]['student_id'] !== this.student.id) {
+                    continue
+                }
+
+                if (this.question.student_answers[key]['task_id'] !== this.task.id) {
                     continue
                 }
 
@@ -102,6 +107,7 @@ export default {
         radio(oldData, newData) {
             this.postStudentAnswer(
                 {
+                    task_id: this.task.id,
                     student_id: this.student.id,
                     question_id: this.question.id,
                     answer: this.radio
@@ -111,6 +117,7 @@ export default {
         text(oldData, newData) {
             this.postStudentAnswer(
                 {
+                    task_id: this.task.id,
                     student_id: this.student.id,
                     question_id: this.question.id,
                     answer: this.text
@@ -120,6 +127,7 @@ export default {
         checkbox(oldData, newData) {
             this.postStudentAnswer(
                 {
+                    task_id: this.task.id,
                     student_id: this.student.id,
                     question_id: this.question.id,
                     answer: this.checkbox

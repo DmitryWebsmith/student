@@ -16,13 +16,14 @@ class DashboardController extends Controller
 {
     public function index(): Response
     {
-        $data['student'] = Student::query()
+        $data['student'] = $student = Student::query()
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
         $data['current_time'] = $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
 
         $data['tasks'] = Task::query()
+            ->where('group_id', $student->group_id)
             ->with(['test', 'group', 'test_passed'])
             ->where('end_time', '>' , $currentTime)
             ->get();

@@ -32,7 +32,7 @@ class TestController extends Controller
 
         $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
 
-        $task = Task::query()
+        $data['task'] = $task = Task::query()
             ->where('id', $request->get('task_id'))
             ->firstOrFail();
 
@@ -75,6 +75,7 @@ class TestController extends Controller
     {
         $request->validate(
             [
+                "task_id" => "required|numeric",
                 "student_id" => "required|numeric",
                 "question_id" => "required|numeric",
             ]
@@ -84,8 +85,7 @@ class TestController extends Controller
             ->findOrFail($request->post('question_id'));
 
         $task = Task::query()
-            ->where('test_id', $question->test_id)
-            ->first();
+            ->findOrFail($request->post('task_id'));
 
         $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
 
@@ -104,6 +104,7 @@ class TestController extends Controller
         $studentAnswer = StudentAnswer::query()
             ->where(
                 [
+                    'task_id' => $task->id,
                     'student_id' => $student->id,
                     'question_id' => $question->id,
                 ]
@@ -122,6 +123,7 @@ class TestController extends Controller
             ->first();
 
         $studentAnswer = new StudentAnswer();
+        $studentAnswer->task_id = $task->id;
         $studentAnswer->student_id = $student->id;
         $studentAnswer->question_id = $question->id;
 
@@ -144,6 +146,7 @@ class TestController extends Controller
 
             foreach ($request->post('answer') as $answerId) {
                 $studentAnswer = new StudentAnswer();
+                $studentAnswer->task_id = $task->id;
                 $studentAnswer->student_id = $student->id;
                 $studentAnswer->question_id = $question->id;
                 $studentAnswer->answer_id = $answerId;
@@ -163,14 +166,14 @@ class TestController extends Controller
         $request->validate(
             [
                 "student_id" => "required|numeric",
-                "test_id" => "required|numeric",
+                "task_id" => "required|numeric",
             ]
         );
 
         $testPassed = TestPassed::query()
             ->where(
                 [
-                    'test_id' => $request->test_id,
+                    'task_id' => $request->task_id,
                     'student_id' => $request->student_id,
                 ]
             );
@@ -179,7 +182,7 @@ class TestController extends Controller
             TestPassed::query()
                 ->insert(
                     [
-                        'test_id' => $request->test_id,
+                        'task_id' => $request->task_id,
                         'student_id' => $request->student_id,
                     ]
                 );
