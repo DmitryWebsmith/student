@@ -28,4 +28,9 @@ class Student extends Model
     {
         return $this->hasOne(Group::class, 'id', 'group_id');
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

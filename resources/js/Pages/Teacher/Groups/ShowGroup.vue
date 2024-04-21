@@ -22,6 +22,7 @@
                             <q-card-actions align="left">
                                 <AddStudent :group_id = group.id></AddStudent>
                                 <DeleteGroup :group_id = group.id></DeleteGroup>
+                                <ExportStudentsToPdf :group_id = group.id />
                             </q-card-actions>
                         </q-card-section>
                     </div>
@@ -37,10 +38,11 @@ import Layout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import AddStudent from '@/Pages/Teacher/Groups/Partials/AddStudent.vue';
 import DeleteGroup from "@/Pages/Teacher/Groups/Partials/DeleteGroup.vue";
+import ExportStudentsToPdf from "@/Pages/Teacher/Groups/Partials/ExportStudentsToPdf.vue";
 
 export default {
     name: "ShowGroup",
-    components: { Layout, AddStudent, DeleteGroup, Link },
+    components: {ExportStudentsToPdf, Layout, AddStudent, DeleteGroup, Link },
     props: {
         group: Object,
         students: Object
