@@ -108,6 +108,38 @@ class GroupController extends Controller
         return redirect(route('groups', absolute: false));
     }
 
+    public function patch(StoreGroupRequest $request): RedirectResponse
+    {
+        $groupName = $request->post('name');
+        $groupId = $request->post('group_id');
+
+        $userId = Auth::id();
+
+        $group = Group::query()
+            ->where(
+                [
+                    'name' => $groupName,
+                    'teacher_id' => $userId,
+                ]
+            );
+
+        if ($group->exists()) {
+            return back()->withErrors(
+                [
+                    'name' => 'Имя класса должно быть уникальным.',
+                ]
+            );
+        }
+
+        $group = Group::query()
+            ->findOrFail($groupId);
+
+        $group->name = $groupName;
+        $group->save();
+
+        return redirect(route('groups', absolute: false));
+    }
+
     public function transliterate(Request $request): JsonResponse
     {
         return new JsonResponse(

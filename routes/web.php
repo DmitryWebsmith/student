@@ -25,6 +25,7 @@ Route::middleware([TeacherAuthenticate::class])->group(function () {
     Route::get('/groups', [GroupController::class, 'index'])->name('groups');
     Route::get('/group/{id}', [GroupController::class, 'showGroup'])->name('show.group');
     Route::post('/group', [GroupController::class, 'store'])->name('store.group');
+    Route::patch('/group', [GroupController::class, 'patch'])->name('patch.group');
     Route::delete('/group', [GroupController::class, 'delete'])->name('delete.group');
     Route::get('/group/export-to-pdf/{group_id}', [GroupController::class, 'exportStudentsToPdf'])->name('export.to.pdf.group');
 
