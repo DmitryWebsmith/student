@@ -26,6 +26,7 @@ Route::middleware([TeacherAuthenticate::class])->group(function () {
     Route::get('/group/{id}', [GroupController::class, 'showGroup'])->name('show.group');
     Route::post('/group', [GroupController::class, 'store'])->name('store.group');
     Route::delete('/group', [GroupController::class, 'delete'])->name('delete.group');
+    Route::get('/group/export-to-pdf/{group_id}', [GroupController::class, 'exportStudentsToPdf'])->name('export.to.pdf.group');
 
     Route::post('/transliterate', [GroupController::class, 'transliterate'])->name('transliterate');
 

@@ -8,6 +8,7 @@ use App\Http\Requests\Teacher\DeleteGroupRequest;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\ExporterService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GroupController extends Controller
 {
@@ -37,6 +39,15 @@ class GroupController extends Controller
         $data['students'] = $group->students;
 
         return Inertia::render('Teacher/Groups/ShowGroup', $data);
+    }
+
+    public function exportStudentsToPdf(int $groupId)
+    {
+        $studentsData = app(ExporterService::class)->getStudentsAuthData($groupId);
+        $pdf = PDF::loadView('teacher.pdf.students', ['students' => $studentsData]);
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('pdf_file.pdf');
     }
 
     public function delete(DeleteGroupRequest $request): RedirectResponse
