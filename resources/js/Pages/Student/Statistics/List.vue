@@ -54,7 +54,7 @@
                                     </th>
                                 </tr>
                             </template>
-                            <template v-if="Object.keys(tasks).length === 0">
+                            <template v-if="Object.keys(results).length === 0">
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4" colspan="5">
                                         Нет пройденных тестов. Если тест пройден, результат отобразится после окончания времени прохождения теста.
@@ -74,13 +74,11 @@
 <script>
 import Layout from '@/Layouts/AuthenticatedStudentLayout.vue';
 import {Head, Link} from '@inertiajs/vue3';
-// import ShowTask from "@/Pages/Teacher/Tasks/ShowTask.vue";
 
 export default {
     name: "List",
     components: {Head, Layout, Link },
     props: {
-        tasks: Object,
         student: Object,
         results: Object,
     },

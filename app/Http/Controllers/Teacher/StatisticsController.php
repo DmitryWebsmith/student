@@ -58,6 +58,7 @@ class StatisticsController extends Controller
             ->get();
 
         $data = [
+            'task' => $task,
             'test' => $test,
             'questions' => $questions,
             'student' => $student,

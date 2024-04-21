@@ -32,6 +32,7 @@
                                         :style="getStyle(question.id)"
                                     >
                                         <StudentAnswers
+                                            :task="task"
                                             :student="student"
                                             :question="question" />
                                     </td>
@@ -55,6 +56,7 @@ export default {
     name: "List",
     components: { Question, Layout, Link, StudentAnswers },
     props: {
+        task: Object,
         test: Object,
         questions: Object,
         student: Object,
