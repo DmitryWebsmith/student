@@ -29,12 +29,13 @@
 export default {
     name: "Question",
     props: {
+        task: Object,
         question: Object,
         student: Object,
     },
     computed: {
         studentAnswers: function () {
-            return this.question.student_answers.filter((studentAnswer) => studentAnswer.student_id === this.student.id)
+            return this.question.student_answers.filter((studentAnswer) => studentAnswer.student_id === this.student.id && studentAnswer.task_id === this.task.id)
         },
     },
 }

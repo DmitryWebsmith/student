@@ -32,14 +32,14 @@ class StatisticsController extends Controller
         $currentTime = Carbon::now($timezone);
 
         $tasks = Task::query()
-            ->where('teacher_id', $student->group->teacher->id)
+            ->where('group_id', $student->group->id)
             ->where('end_time', '<', $currentTime)
             ->with(['test', 'test.category', 'group'])
             ->get();
 
         $studentResults = [];
         foreach ($tasks as $task) {
-            $studentResults[$task->test->id] = [
+            $studentResults[$task->id] = [
                 'task_id' => $task->id,
                 'test_id' => $task->test->id,
                 'test_name' => $task->test->name,
@@ -51,7 +51,6 @@ class StatisticsController extends Controller
 
         return Inertia::render('Student/Statistics/List',
             [
-                "tasks" => $tasks,
                 "student" => $student,
                 "results" => $studentResults,
             ]);
@@ -76,6 +75,7 @@ class StatisticsController extends Controller
             ->get();
 
         $data = [
+            'task' => $task,
             'test' => $test,
             'questions' => $questions,
             'student' => $student,
