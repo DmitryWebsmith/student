@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\StoreGroupRequest;
 use App\Http\Requests\Teacher\DeleteGroupRequest;
 use App\Models\Group;
+use App\Models\Setting;
 use App\Models\Student;
+use App\Models\Task;
 use App\Models\User;
 use App\Services\ExporterService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -39,6 +42,52 @@ class GroupController extends Controller
         $data['students'] = $group->students;
 
         return Inertia::render('Teacher/Groups/ShowGroup', $data);
+    }
+
+    public function showGroupTasks(int $groupId): Response
+    {
+        $data['group'] = Group::query()
+            ->findOrFail($groupId);
+
+        $timezone = Setting::query()
+            ->where('name', 'default_timezone')
+            ->first()
+            ->value;
+
+        $currentTime = Carbon::now($timezone);
+
+        $data['tasks'] = Task::query()
+            ->where('teacher_id', Auth::id())
+            ->where('group_id', $groupId)
+            ->where('end_time', '<', $currentTime)
+            ->with(['test', 'test.category', 'group'])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return Inertia::render('Teacher/Groups/ShowGroupTasks', $data);
+    }
+
+    public function showGroupResults(int $groupId): Response
+    {
+        $data['group'] = Group::query()
+            ->findOrFail($groupId);
+
+        $timezone = Setting::query()
+            ->where('name', 'default_timezone')
+            ->first()
+            ->value;
+
+        $currentTime = Carbon::now($timezone);
+
+        $data['tasks'] = Task::query()
+            ->where('teacher_id', Auth::id())
+            ->where('group_id', $groupId)
+            ->where('end_time', '<', $currentTime)
+            ->with(['test', 'test.category', 'group'])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return Inertia::render('Teacher/Groups/ShowGroupResults', $data);
     }
 
     public function exportStudentsToPdf(int $groupId)

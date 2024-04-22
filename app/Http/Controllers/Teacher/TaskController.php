@@ -24,6 +24,7 @@ class TaskController extends Controller
         $tasks = Task::query()
             ->where('teacher_id', Auth::id())
             ->with(['test', 'group'])
+            ->orderBy('id', 'DESC')
             ->get();
 
         return Inertia::render('Teacher/Tasks/List', ["tasks" => $tasks]);

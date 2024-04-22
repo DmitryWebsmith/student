@@ -24,6 +24,8 @@
                                 <DeleteGroup :group_id = group.id></DeleteGroup>
                                 <RenameGroup :group_id = group.id />
                                 <ExportStudentsToPdf :group_id = group.id />
+                                <GroupResultsButton :group_id = group.id />
+                                <GroupTasksButton :group_id = group.id />
                             </q-card-actions>
                         </q-card-section>
                     </div>
@@ -41,10 +43,12 @@ import AddStudent from '@/Pages/Teacher/Groups/Partials/AddStudent.vue';
 import DeleteGroup from "@/Pages/Teacher/Groups/Partials/DeleteGroup.vue";
 import ExportStudentsToPdf from "@/Pages/Teacher/Groups/Partials/ExportStudentsToPdf.vue";
 import RenameGroup from "@/Pages/Teacher/Groups/Partials/RenameGroup.vue";
+import GroupResultsButton from "@/Pages/Teacher/Groups/Partials/GroupResultsButton.vue";
+import GroupTasksButton from "@/Pages/Teacher/Groups/Partials/GroupTasksButton.vue";
 
 export default {
     name: "ShowGroup",
-    components: {ExportStudentsToPdf, Layout, AddStudent, DeleteGroup, Link, RenameGroup },
+    components: {ExportStudentsToPdf, Layout, AddStudent, DeleteGroup, Link, RenameGroup, GroupResultsButton, GroupTasksButton },
     props: {
         group: Object,
         students: Object
