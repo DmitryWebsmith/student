@@ -31,6 +31,7 @@ class StatisticsController extends Controller
             ->where('teacher_id', Auth::id())
             ->where('end_time', '<', $currentTime)
             ->with(['test', 'test.category', 'group'])
+            ->orderBy('id', 'DESC')
             ->get();
 
         return Inertia::render('Teacher/Statistics/List', ["tasks" => $tasks]);

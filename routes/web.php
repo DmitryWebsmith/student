@@ -28,6 +28,8 @@ Route::middleware([TeacherAuthenticate::class])->group(function () {
     Route::patch('/group', [GroupController::class, 'patch'])->name('patch.group');
     Route::delete('/group', [GroupController::class, 'delete'])->name('delete.group');
     Route::get('/group/export-to-pdf/{group_id}', [GroupController::class, 'exportStudentsToPdf'])->name('export.to.pdf.group');
+    Route::get('/group-results/{group_id}', [GroupController::class, 'showGroupResults'])->name('show.group.results');
+    Route::get('/group-tasks/{group_id}', [GroupController::class, 'showGroupTasks'])->name('show.group.tasks');
 
     Route::post('/transliterate', [GroupController::class, 'transliterate'])->name('transliterate');
 
