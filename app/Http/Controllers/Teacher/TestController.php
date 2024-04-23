@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Teacher\SaveTestNameRequest;
 use App\Http\Requests\Teacher\SaveTestQuestionRequest;
 use App\Http\Requests\Teacher\SaveTextAnswerRequest;
+use App\Http\Requests\Teacher\UpdateTextRequest;
 use App\Models\Answer;
 use App\Models\Category;
 use App\Models\Question;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TestController extends Controller
 {
@@ -37,7 +39,7 @@ class TestController extends Controller
         return Inertia::render('Teacher/Tests/StoreTest', $data);
     }
 
-    public function showTest($id): Response
+    public function showTest(int $id): Response
     {
         $test = Test::query()
             ->findOrFail($id);
@@ -55,7 +57,25 @@ class TestController extends Controller
         return Inertia::render('Teacher/Tests/ShowTest', $data);
     }
 
-    public function destroy($id): Response
+    public function showUpdateTestPage(int $id): Response
+    {
+        $test = Test::query()
+            ->findOrFail($id);
+
+        $questions = Question::query()
+            ->where('test_id', $test->id)
+            ->with('answers')
+            ->get();
+
+        $data = [
+            'test' => $test,
+            'questions' => $questions,
+        ];
+
+        return Inertia::render('Teacher/Tests/UpdateTest', $data);
+    }
+
+    public function destroy(int $id): Response
     {
         $test = Test::query()
             ->where(
@@ -75,6 +95,22 @@ class TestController extends Controller
             ->get();
 
         return Inertia::render('Teacher/Tests/List', ["tests" => $tests]);
+    }
+
+    public function destroyQuestion(int $id): JsonResponse
+    {
+        $question = Question::query()->findOrFail($id);
+
+        $questions = Question::query()
+            ->where('test_id', $question->test_id);
+
+        if ($questions->count() === 1) {
+            return new JsonResponse('Не очень хорошая идея удалять последний вопрос теста. Лучше удалите тест.', ResponseAlias::HTTP_BAD_REQUEST);
+        }
+
+        $question->delete();
+
+        return new JsonResponse('ok', ResponseAlias::HTTP_OK);
     }
 
     public function saveTestName(SaveTestNameRequest $request): JsonResponse
@@ -136,5 +172,51 @@ class TestController extends Controller
         }
 
         return new JsonResponse([], JsonResponse::HTTP_OK);
+    }
+
+    public function updateText(UpdateTextRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        if ($data['type'] == 'answer') {
+            $answer = Answer::query()->findOrFail($data['id']);
+            $answer->updated_at = Carbon::now();
+            $answer->answer = $data['text'];
+            $answer->save();
+        }
+
+        if ($data['type'] == 'question') {
+            $question = Question::query()->findOrFail($data['id']);
+            $question->updated_at = Carbon::now();
+            $question->question = $data['text'];
+            $question->save();
+        }
+
+        return new JsonResponse('ok', ResponseAlias::HTTP_OK);
+    }
+
+    public function updateRightAnswer(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            "right_answers" => "required|array",
+        ]);
+
+        $answer = Answer::query()->findOrFail($data["right_answers"][0]);
+
+        Answer::query()
+            ->where('question_id', $answer->question_id)
+            ->update(
+                [
+                    'truth' => 0,
+                ]);
+
+        Answer::query()
+            ->whereIn('id', $data["right_answers"])
+            ->update(
+                [
+                    'truth' => 1,
+                ]);
+
+        return new JsonResponse('ok', ResponseAlias::HTTP_OK);
     }
 }

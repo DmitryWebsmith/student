@@ -47,11 +47,15 @@ Route::middleware([TeacherAuthenticate::class])->group(function () {
     Route::get('/tests', [TestController::class, 'index'])->name('tests');
     Route::get('/test', [TestController::class, 'showAddTestPage'])->name('add.test');
     Route::get('/test/{id}', [TestController::class, 'showTest'])->name('show.test');
+    Route::get('/update-test/{id}', [TestController::class, 'showUpdateTestPage'])->name('show.update.test.page');
     Route::delete('/test/{id}', [TestController::class, 'destroy'])->name('delete.test');
+    Route::post('/test/question/{id}', [TestController::class, 'destroyQuestion'])->name('delete.question.test');
     Route::post('/test/save-test-name', [TestController::class, 'saveTestName'])->name('save.test.name');
     Route::post('/test/save-test-question', [TestController::class, 'saveTestQuestion']);
     Route::post('/test/save-text-answer', [TestController::class, 'saveTextAnswer']);
     Route::post('/test/save-multiple-answer', [TestController::class, 'saveMultipleAnswer']);
+    Route::post('/test/update-text', [TestController::class, 'updateText']);
+    Route::post('/test/update-right-answers', [TestController::class, 'updateRightAnswer']);
 
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
     Route::get('/task/{id}', [TaskController::class, 'showTask'])->name('show.task.results');
