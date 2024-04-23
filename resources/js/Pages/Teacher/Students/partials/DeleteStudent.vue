@@ -1,7 +1,5 @@
 <template>
-    <div class="q-pa-md q-gutter-sm">
-        <q-btn color="purple" label="Удалить ученика" @click="show"/>
-    </div>
+    <q-btn color="purple" label="Удалить ученика" @click="show"/>
     <q-dialog ref="dialog">
         <q-card class="q-dialog-plugin">
             <q-card-section>

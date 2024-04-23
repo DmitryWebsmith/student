@@ -216,16 +216,16 @@ export default {
             let answerChecked = false
             for (let key in answerObject) {
                 if (answerObject.hasOwnProperty(key)) {
-                    if (answerObject[key]['text'].length === 0) {
+                    if (answerObject[key].text.length === 0) {
                         alert("Все поля вариантов ответа должны быть заполнены.")
                         return false
                     }
-                    if (answerObject[key]['truth']) {
+                    if (answerObject[key].truth) {
                         answerChecked = true;
                     }
                 }
             }
-            if (!answerChecked) {
+            if (answerChecked === false) {
                 alert("Один из ответов должен быть помечен верным.")
                 return false
             }
