@@ -125,11 +125,12 @@ export default {
                             if (testPassed.passed === 1) {
                                 return true
                             }
-                            let currentTime = (new Date(this.current_time));
-                            let taskStartTime = (new Date(testPassed.created_at))
-                            let taskEndTime = taskStartTime.setMinutes(taskStartTime.getMinutes() + task.duration)
-                            taskEndTime = (new Date(taskEndTime))
-                            if (currentTime.getTime() > taskEndTime.getTime()) {
+                            let currentTime = (new Date(this.current_time))
+                            let taskStartTime = testPassed.created_at
+                            taskStartTime = taskStartTime.replace('T',' ').replace('.000000Z','')
+                            taskStartTime = (new Date(taskStartTime))
+                            let taskEndTime = taskStartTime.setMinutes(taskStartTime.getMinutes()+task.duration)
+                            if (currentTime.getTime() > taskEndTime) {
                                 return true
                             }
                         }
