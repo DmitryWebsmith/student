@@ -47,7 +47,7 @@ export default {
                 student_id: this.student.id,
                 task_id: this.task.id
             }
-            axios.post(route('mark.test.passing'), data)
+            axios.post(route('mark.test.passed'), data)
                 .then((res) => {
                     router.get(route('student.dashboard'))
                 })

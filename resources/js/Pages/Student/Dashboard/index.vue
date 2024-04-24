@@ -18,16 +18,19 @@
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-3 text-center">
                                                     Тест
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-3 text-center">
                                                     Действие
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-3 text-center">
+                                                    Длительность сдачи, мин
+                                                </th>
+                                                <th scope="col" class="px-6 py-3 text-center">
                                                     Начало сдачи
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-3 text-center">
                                                     Окончание сдачи
                                                 </th>
                                             </tr>
@@ -35,26 +38,29 @@
                                         <tbody>
                                             <template v-if="Object.keys(tasks).length > 0">
                                                 <tr v-for="task in tasks" :key="task.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                    <td class="px-6 py-4">
+                                                    <td class="px-6 py-4 text-center">
                                                         {{ task.test.name }}
                                                     </td>
                                                     <template v-if="passedTest(task)">
-                                                        <td class="px-6 py-4">
+                                                        <td class="px-6 py-4 text-center">
                                                             Тест пройден
                                                         </td>
                                                     </template>
                                                     <template v-if="!passedTest(task)">
-                                                        <td class="px-6 py-4">
+                                                        <td class="px-6 py-4 text-center">
                                                             <q-btn
                                                                 color="primary"
                                                                 label="Пройти тест"
                                                                 @click="passTest(task)"/>
                                                         </td>
                                                     </template>
-                                                    <td class="px-6 py-4">
+                                                    <td class="py-4 text-center">
+                                                        {{ task.duration }}
+                                                    </td>
+                                                    <td class="py-4 text-center">
                                                         {{ task.start_time }}
                                                     </td>
-                                                    <td class="px-6 py-4">
+                                                    <td class="py-4 text-center">
                                                         {{ task.end_time }}
                                                     </td>
                                                 </tr>
@@ -116,7 +122,16 @@ export default {
                     let testPassed = testPassedList[key]
                     if (testPassed.hasOwnProperty('student_id') && testPassed.hasOwnProperty('task_id')) {
                         if (testPassed.student_id === this.student.id && testPassed.task_id === task.id) {
-                            return true
+                            if (testPassed.passed === 1) {
+                                return true
+                            }
+                            let currentTime = (new Date(this.current_time));
+                            let taskStartTime = (new Date(testPassed.created_at))
+                            let taskEndTime = taskStartTime.setMinutes(taskStartTime.getMinutes() + task.duration)
+                            taskEndTime = (new Date(taskEndTime))
+                            if (currentTime.getTime() > taskEndTime.getTime()) {
+                                return true
+                            }
                         }
                     }
                 }

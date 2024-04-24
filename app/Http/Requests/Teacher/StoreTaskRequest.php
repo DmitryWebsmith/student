@@ -34,7 +34,11 @@ class StoreTaskRequest extends FormRequest
                 "required",
                 "array",
             ],
-            "date_time" => [
+            "date_time_start" => [
+                "required",
+                "string",
+            ],
+            "date_time_end" => [
                 "required",
                 "string",
             ],

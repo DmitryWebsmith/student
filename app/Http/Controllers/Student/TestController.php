@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TestController extends Controller
 {
@@ -30,7 +31,7 @@ class TestController extends Controller
 
         $data['user_id'] = Auth::id();
 
-        $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
+        $data['current_time'] = $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
 
         $data['task'] = $task = Task::query()
             ->where('id', $request->get('task_id'))
@@ -38,6 +39,11 @@ class TestController extends Controller
 
         $startTime = Carbon::parse($task->start_time);
         $endTime = Carbon::parse($task->end_time);
+
+        if ($startTime > $currentTime || $endTime < $currentTime) {
+            $data['message'] = 'Текущее время не соответствует диапазону времени прохождения теста.';
+            return Inertia::render('Student/Dashboard/index', $data);
+        }
 
         $data['test'] = $test = Test::query()
             ->with('questions')
@@ -49,26 +55,46 @@ class TestController extends Controller
             ->with(['answers', 'student_answers'])
             ->get();
 
-        $data['student'] = Student::query()
+        $data['student'] = $student = Student::query()
             ->where('user_id', Auth::id())
             ->firstOrFail();
-
-        if ($startTime <= $currentTime && $endTime > $currentTime) {
-            return Inertia::render('Student/Tests/PassTest', $data);
-        }
-
-        $data['current_time'] = $currentTime = App(DateFormatService::class)->getLocalDateTime(
-            Carbon::now()->format('Y-m-d H:i:s')
-        );
 
         $data['tasks'] = Task::query()
             ->with(['test', 'group', 'test_passed'])
             ->where('end_time', '>', $currentTime)
             ->get();
 
-        $data['message'] = 'Текущее время не соответствует диапазону времени прохождения теста.';
+        $testPassed = TestPassed::query()
+            ->where(
+                [
+                    'task_id' => $request->task_id,
+                    'student_id' => $student->id,
+                ]
+            );
 
-        return Inertia::render('Student/Dashboard/index', $data);
+        if (!$testPassed->exists()) {
+            TestPassed::query()
+                ->insert(
+                    [
+                        'task_id' => $request->task_id,
+                        'student_id' => $student->id,
+                        'created_at' => $currentTime,
+                        'updated_at' => $currentTime,
+                    ]
+                );
+        }
+
+        if ($testPassed->exists()) {
+            $testPassed = $testPassed->first();
+            $endTimeForTestPass = Carbon::parse($testPassed->created_at)->addMinutes($task->duration);
+
+            if ($currentTime > $endTimeForTestPass) {
+                $data['message'] = 'Время сдачи теста истекло.';
+                return Inertia::render('Student/Dashboard/index', $data);
+            }
+        }
+
+        return Inertia::render('Student/Tests/PassTest', $data);
     }
 
     public function storeStudentAnswer(Request $request): JsonResponse
@@ -95,7 +121,27 @@ class TestController extends Controller
         if ($startTime > $currentTime || $endTime < $currentTime) {
             $message = 'Текущее время не соответствует диапазону времени прохождения теста.';
 
-            return new JsonResponse(['message' => $message], JsonResponse::HTTP_OK);
+            return new JsonResponse(['message' => $message], ResponseAlias::HTTP_OK);
+        }
+
+        $testPassed = TestPassed::query()
+            ->where(
+                [
+                    'student_id' => $request->post('student_id'),
+                    'task_id' => $request->post('task_id'),
+                ]
+            )->first();
+
+        if ($testPassed !== null) {
+            $endTimeForTestPass = Carbon::parse($testPassed->created_at)->addMinutes($task->duration);
+
+            if ($currentTime > $endTimeForTestPass) {
+                $data = [
+                    'testPassed' => true,
+                    'message' => 'Время сдачи теста истекло.',
+                ];
+                return new JsonResponse($data, ResponseAlias::HTTP_OK);
+            }
         }
 
         $student = Student::query()
@@ -161,7 +207,7 @@ class TestController extends Controller
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
-    public function markTestPassing(Request $request): JsonResponse
+    public function markTestPassed(Request $request): JsonResponse
     {
         $request->validate(
             [
@@ -176,16 +222,11 @@ class TestController extends Controller
                     'task_id' => $request->task_id,
                     'student_id' => $request->student_id,
                 ]
-            );
+            )->firstOrFail();
 
-        if (!$testPassed->exists()) {
-            TestPassed::query()
-                ->insert(
-                    [
-                        'task_id' => $request->task_id,
-                        'student_id' => $request->student_id,
-                    ]
-                );
+        if ($testPassed->exists()) {
+            $testPassed->passed = true;
+            $testPassed->save();
         }
 
         return new JsonResponse([], JsonResponse::HTTP_OK);

@@ -49,17 +49,9 @@ class GroupController extends Controller
         $data['group'] = Group::query()
             ->findOrFail($groupId);
 
-        $timezone = Setting::query()
-            ->where('name', 'default_timezone')
-            ->first()
-            ->value;
-
-        $currentTime = Carbon::now($timezone);
-
         $data['tasks'] = Task::query()
             ->where('teacher_id', Auth::id())
             ->where('group_id', $groupId)
-            ->where('end_time', '<', $currentTime)
             ->with(['test', 'test.category', 'group'])
             ->orderBy('id', 'DESC')
             ->get();
