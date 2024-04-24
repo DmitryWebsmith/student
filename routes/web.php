@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/student-dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('student.dashboard');
     Route::get('/pass-test', [\App\Http\Controllers\Student\TestController::class, 'index'])->name('student.pass.test.index');
     Route::post('/store-student-answer', [\App\Http\Controllers\Student\TestController::class, 'storeStudentAnswer'])->name('store.student.answer');
-    Route::post('/mark-test-passing', [\App\Http\Controllers\Student\TestController::class, 'markTestPassing'])->name('mark.test.passing');
+    Route::post('/mark-test-passed', [\App\Http\Controllers\Student\TestController::class, 'markTestPassed'])->name('mark.test.passed');
 
     Route::get('/student-statistics', [\App\Http\Controllers\Student\StatisticsController::class, 'index'])->name('student.statistics');
     Route::get('/student-statistics/result', [\App\Http\Controllers\Student\StatisticsController::class, 'showStudentResult'])->name('student.statistics.test.result');

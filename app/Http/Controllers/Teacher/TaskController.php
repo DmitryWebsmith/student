@@ -78,14 +78,17 @@ class TaskController extends Controller
         $task->teacher_id = Auth::id();
         $task->group_id = $request->post('group')['value'];
         $task->test_id = $request->post('test')['value'];
-        $task->start_time = Carbon::parse($request->post('date_time'));
-        $task->end_time = Carbon::parse($task->start_time)->addMinutes($request->post('duration'));
+        $task->start_time = Carbon::parse($request->post('date_time_start'));
+        $task->end_time = Carbon::parse($request->post('date_time_end'));
+        $task->duration = $request->post('duration');
+        //$task->end_time = Carbon::parse($task->start_time)->addMinutes($request->post('duration'));
         $task->created_at = Carbon::now();
         $task->save();
 
         $tasks = Task::query()
             ->with(['test', 'group'])
             ->where('teacher_id', Auth::id())
+            ->orderBy('id', 'DESC')
             ->get();
 
         return Inertia::render('Teacher/Tasks/List', ["tasks" => $tasks]);

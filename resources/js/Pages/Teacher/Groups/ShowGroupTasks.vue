@@ -23,6 +23,9 @@
                                     Дата и время окончания сдачи
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Длительность сдачи, мин
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Действие
                                 </th>
                             </tr>
@@ -37,6 +40,9 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ task.end_time }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ task.duration }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <DeleteTask :id="task.id" />

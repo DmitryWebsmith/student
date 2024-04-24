@@ -29,23 +29,44 @@
                         <div class="q-pa-sm" style="max-width: 600px">
                             <div class="py-2 text-gray-900 dark:text-gray-100">
                                 Выбор даты и времени начала сдачи теста.
-                                <template v-if="form.date_time !== ''">Выбрана дата {{ form.date_time }}</template>
+                                <template v-if="form.date_time_start !== ''">Выбрана дата {{ form.date_time_start }}</template>
                             </div>
                             <table>
                                 <tr>
                                     <td>
                                         <div class="q-gutter-md row items-start">
-                                            <q-date v-model="form.date_time" mask="YYYY-MM-DD HH:mm" color="purple"/>
+                                            <q-date v-model="form.date_time_start" mask="YYYY-MM-DD HH:mm" color="purple"/>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="q-gutter-md row items-start">
-                                            <q-time v-model="form.date_time" mask="YYYY-MM-DD HH:mm" color="purple"/>
+                                            <q-time v-model="form.date_time_start" mask="YYYY-MM-DD HH:mm" color="purple"/>
                                         </div>
                                     </td>
                                 </tr>
                             </table>
-                            <InputError class="mt-2" :message="form.errors.date_time" />
+                            <InputError class="mt-2" :message="form.errors.date_time_start" />
+                        </div>
+                        <div class="q-pa-sm" style="max-width: 600px">
+                            <div class="py-2 text-gray-900 dark:text-gray-100">
+                                Выбор даты и времени окончания сдачи теста.
+                                <template v-if="form.date_time_end !== ''">Выбрана дата {{ form.date_time_end }}</template>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="q-gutter-md row items-start">
+                                            <q-date v-model="form.date_time_end" mask="YYYY-MM-DD HH:mm" color="purple"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="q-gutter-md row items-start">
+                                            <q-time v-model="form.date_time_end" mask="YYYY-MM-DD HH:mm" color="purple"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <InputError class="mt-2" :message="form.errors.date_time_end" />
                         </div>
                         <div class="q-pa-sm" style="max-width: 600px">
                             <div class="q-pa-md">
@@ -104,7 +125,8 @@ export default {
                 group: '',
                 category: '',
                 test: '',
-                date_time: '',
+                date_time_start: '',
+                date_time_end: '',
                 duration: '',
             }),
             groupOptions: [],
