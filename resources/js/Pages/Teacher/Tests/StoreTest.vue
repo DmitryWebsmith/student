@@ -105,12 +105,12 @@
                         <div class="mt-6" v-show="radioButtonAnswerVisibility">
                             <label>Ответ</label>
                             <table style="width: 100%">
-                                <tr v-for="answer in radioButtonAnswers" :key="answer.id">
+                                <tr v-for="(answer, index) in radioButtonAnswers" :key="index">
                                     <td style="width: 90%">
                                         <input type="text" v-model="answer.text" class="mt-1 block w-full"/>
                                     </td>
                                     <td style="width: 5%; text-align: right">
-                                        <input type="radio" :checked="answer.truth" :value="answer.id" v-model="radio">
+                                        <input type="radio" :checked="answer.truth" :value="answer.id" v-model="radioButtonAnswers[index].truth">
                                     </td>
                                     <td style="width: 5%; text-align: right">
                                         <button
@@ -190,7 +190,6 @@ export default {
             testName: null,
             question: null,
             textAnswer: null,
-            radio: null,
             categoryOptions: [],
             checkBoxAnswers: [
                 {id: id++, text: '', truth: false},
@@ -220,7 +219,7 @@ export default {
                         alert("Все поля вариантов ответа должны быть заполнены.")
                         return false
                     }
-                    if (answerObject[key].truth) {
+                    if (answerObject[key].truth !== false) {
                         answerChecked = true;
                     }
                 }
@@ -393,17 +392,6 @@ export default {
             this.textAnswerVisibility = false
             location.href = `/test/${this.testId}`;
         },
-    },
-    watch: {
-        radio(oldValue, newValue) {
-            for (let key in this.radioButtonAnswers) {
-                if (this.radioButtonAnswers.hasOwnProperty(key)) {
-                    if (this.radioButtonAnswers[key]['id'] === this.radio) {
-                        this.radioButtonAnswers[key]['truth'] = true
-                    }
-                }
-            }
-        }
     }
 }
 </script>
