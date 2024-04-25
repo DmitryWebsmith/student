@@ -33,7 +33,7 @@
                             </thead>
                             <tbody>
                             <template v-if="Object.keys(results).length > 0">
-                                <tr v-for="result in results" :key="result.test_id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr v-for="(result, index) in results" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ result.test_name }}
                                     </th>

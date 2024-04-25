@@ -35,11 +35,12 @@ class StatisticsController extends Controller
             ->where('group_id', $student->group->id)
             ->where('end_time', '<', $currentTime)
             ->with(['test', 'test.category', 'group'])
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $studentResults = [];
         foreach ($tasks as $task) {
-            $studentResults[$task->id] = [
+            $studentResults[] = [
                 'task_id' => $task->id,
                 'test_id' => $task->test->id,
                 'test_name' => $task->test->name,

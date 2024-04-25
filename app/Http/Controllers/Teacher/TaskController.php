@@ -81,7 +81,6 @@ class TaskController extends Controller
         $task->start_time = Carbon::parse($request->post('date_time_start'));
         $task->end_time = Carbon::parse($request->post('date_time_end'));
         $task->duration = $request->post('duration');
-        //$task->end_time = Carbon::parse($task->start_time)->addMinutes($request->post('duration'));
         $task->created_at = Carbon::now();
         $task->save();
 

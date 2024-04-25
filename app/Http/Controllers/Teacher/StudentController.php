@@ -31,6 +31,8 @@ class StudentController extends Controller
         $data['user'] = User::query()
             ->findOrFail($student->user_id);
 
+        $data['url'] = config('app.url');
+
         return Inertia::render('Teacher/Students/ShowStudent', $data);
     }
 

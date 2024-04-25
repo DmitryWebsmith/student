@@ -18,6 +18,10 @@
                     <div class="px-6 py-2 text-gray-900 dark:text-gray-100">
                         Пароль: {{ student.password }}
                     </div>
+                    <div class="px-6 py-2 text-gray-900 dark:text-gray-100">
+                        Ссылка для входа ученика в кабинет:
+                        <q-btn class="glossy" color="teal" size="13px" label="Копировать" @click="copy"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,7 +54,22 @@ export default {
     components: { Layout, UpdateStudent, DeleteStudent, Link },
     props: {
         student: Object,
-        user: Object
+        user: Object,
+        url: String
+    },
+    data() {
+        return {
+            linkForAuth: this.url+'/login-by-link?email='+this.user.email+'&password='+this.student.password
+        }
+    },
+    methods: {
+        copy() {
+            try {
+                navigator.clipboard.writeText(this.linkForAuth)
+            } catch (e) {
+                throw e
+            }
+        }
     }
 }
 </script>
