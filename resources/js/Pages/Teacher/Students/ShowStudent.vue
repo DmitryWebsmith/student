@@ -48,6 +48,7 @@ import Layout from '@/Layouts/AuthenticatedLayout.vue';
 import UpdateStudent from "@/Pages/Teacher/Students/partials/UpdateStudent.vue";
 import DeleteStudent from "@/Pages/Teacher/Students/partials/DeleteStudent.vue";
 import { Link } from '@inertiajs/vue3';
+import { useQuasar } from 'quasar'
 
 export default {
     name: "ShowStudent",
@@ -59,17 +60,29 @@ export default {
     },
     data() {
         return {
-            linkForAuth: this.url+'/login-by-link?email='+this.user.email+'&password='+this.student.password
+            linkForAuth: this.url+'/login-by-link?email='+this.user.email+'&password='+this.student.password,
+            $q: useQuasar(),
         }
     },
     methods: {
         copy() {
             try {
                 navigator.clipboard.writeText(this.linkForAuth)
+                this.showNotify('Скопирована ссылка '+this.linkForAuth)
             } catch (e) {
                 throw e
             }
-        }
+        },
+        showNotify(message) {
+            this.$q.notify({
+                message: message,
+                color: 'primary',
+                // avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+                actions: [
+                    { icon: 'close', color: 'white', round: true, handler: () => { /* ... */ } }
+                ]
+            })
+        },
     }
 }
 </script>
