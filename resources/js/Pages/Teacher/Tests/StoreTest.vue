@@ -110,7 +110,10 @@
                                         <input type="text" v-model="answer.text" class="mt-1 block w-full"/>
                                     </td>
                                     <td style="width: 5%; text-align: right">
-                                        <input type="radio" :checked="answer.truth" :value="answer.id" v-model="radioButtonAnswers[index].truth">
+                                        <input
+                                            type="radio"
+                                            value="1"
+                                            v-model="radioButtonAnswers[index].truth">
                                     </td>
                                     <td style="width: 5%; text-align: right">
                                         <button
