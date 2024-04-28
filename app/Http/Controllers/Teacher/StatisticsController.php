@@ -9,27 +9,23 @@ use App\Models\Student;
 use App\Models\StudentAnswer;
 use App\Models\Task;
 use App\Models\Test;
+use App\Models\TestPassed;
+use App\Services\DateFormatService;
 use App\Services\StudentResultsService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class StatisticsController extends Controller
 {
     public function index(): Response
     {
-        $timezone = Setting::query()
-            ->where('name', 'default_timezone')
-            ->first()
-            ->value;
-
-        $currentTime = Carbon::now($timezone);
-
         $tasks = Task::query()
             ->where('teacher_id', Auth::id())
-            ->where('end_time', '<', $currentTime)
             ->with(['test', 'test.category', 'group'])
             ->orderBy('id', 'DESC')
             ->get();
@@ -81,12 +77,30 @@ class StatisticsController extends Controller
             ->get();
 
         $studentsData = [];
+
         foreach ($students as $student) {
-            $studentsData[$student->id] = [
-                'name' => $student->first_name . ' ' . $student->last_name,
-                'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id),
-            ];
+            $testPassed = TestPassed::query()
+                ->where(
+                    [
+                        'student_id' => $student->id,
+                        'task_id' => $task->id,
+                    ]
+                )->first();
+
+            if ($testPassed !== null) {
+                $endTimeForTestPass = Carbon::parse($testPassed->created_at)->addMinutes($task->duration);
+                $currentTime = App(DateFormatService::class)->getLocalDateTime(Carbon::now()->format('Y-m-d H:i:s'));
+
+                if ($currentTime > $endTimeForTestPass) {
+                    $studentsData[$student->id] = [
+                        'name' => $student->first_name . ' ' . $student->last_name,
+                        'result' => app(StudentResultsService::class)->getResultsOfPassedTest($student->id, $task->id),
+                    ];
+                }
+            }
         }
+
+        logger()->info("showGroupResult", $studentsData);
 
         return Inertia::render('Teacher/Statistics/GroupResult',
             [
