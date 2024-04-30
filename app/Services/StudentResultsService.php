@@ -71,11 +71,11 @@ class StudentResultsService
 
         if ($score >= 85) {
             $result['score'] = 5;
-        } elseif ($score < 85 && $score >= 75) {
+        } elseif ($score < 85 && $score >= 70) {
             $result['score'] = 4;
-        } elseif ($score < 75 && $score >= 60) {
+        } elseif ($score < 70 && $score >= 50) {
             $result['score'] = 3;
-        } elseif ($score < 60) {
+        } elseif ($score < 50) {
             $result['score'] = 2;
         }
 
