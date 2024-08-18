@@ -3,7 +3,7 @@
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
         <div
             style="
-        background-image: url('/images/landing-background-image.jpg');
+        background-image: url('/images/landing-background-image-1.jpg');
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;"
