@@ -23,5 +23,7 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment('production')) {
             $this->app['request']->server->set('HTTPS','on');
         }
+
+        App::setLocale("ru");
     }
 }
